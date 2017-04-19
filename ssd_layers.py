@@ -131,9 +131,9 @@ class PriorBox(Layer):
             if ar == 1 and len(box_widths) == 0:
                 box_widths.append(self.min_size)
                 box_heights.append(self.min_size)
-            # elif ar == 1 and len(box_widths) > 0:
-            #     box_widths.append(np.sqrt(self.min_size * self.max_size))
-            #     box_heights.append(np.sqrt(self.min_size * self.max_size))
+            elif ar == 1 and len(box_widths) > 0:
+                box_widths.append(np.sqrt(self.min_size * self.max_size))
+                box_heights.append(np.sqrt(self.min_size * self.max_size))
             elif ar != 1:
                 box_widths.append(self.min_size * np.sqrt(ar))
                 box_heights.append(self.min_size / np.sqrt(ar))
