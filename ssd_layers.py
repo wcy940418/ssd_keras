@@ -96,7 +96,7 @@ class PriorBox(Layer):
         if max_size:
             if max_size < min_size:
                 raise Exception('max_size must be greater than min_size.')
-            self.aspect_ratios.append(1.0)
+            # self.aspect_ratios.append(1.0)
         if aspect_ratios:
             for ar in aspect_ratios:
                 if ar in self.aspect_ratios:
@@ -131,9 +131,9 @@ class PriorBox(Layer):
             if ar == 1 and len(box_widths) == 0:
                 box_widths.append(self.min_size)
                 box_heights.append(self.min_size)
-            elif ar == 1 and len(box_widths) > 0:
-                box_widths.append(np.sqrt(self.min_size * self.max_size))
-                box_heights.append(np.sqrt(self.min_size * self.max_size))
+            # elif ar == 1 and len(box_widths) > 0:
+            #     box_widths.append(np.sqrt(self.min_size * self.max_size))
+            #     box_heights.append(np.sqrt(self.min_size * self.max_size))
             elif ar != 1:
                 box_widths.append(self.min_size * np.sqrt(ar))
                 box_heights.append(self.min_size / np.sqrt(ar))
@@ -144,8 +144,10 @@ class PriorBox(Layer):
         step_y = img_height / layer_height
         linx = np.linspace(0.5 * step_x, img_width - 0.5 * step_x,
                            layer_width)
-        liny = np.linspace(0.5 * step_y, img_height - 0.5 * step_y,
-                           layer_height)
+        # liny = np.linspace(0.5 * step_y, img_height - 0.5 * step_y,
+        #                    layer_height)
+        liny = np.linspace(0.5 * step_y, img_height,
+                           layer_height * 2)
         centers_x, centers_y = np.meshgrid(linx, liny)
         centers_x = centers_x.reshape(-1, 1)
         centers_y = centers_y.reshape(-1, 1)
