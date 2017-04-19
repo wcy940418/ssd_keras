@@ -142,8 +142,8 @@ def SSD300(input_shape, num_classes=21):
     flatten = Flatten(name='conv4_3_norm_mbox_loc_flat')
     net['conv4_3_norm_mbox_loc_flat'] = flatten(net['conv4_3_norm_mbox_loc'])
     name = 'conv4_3_norm_mbox_conf'
-    if num_classes != 21:
-        name += '_{}'.format(num_classes)
+    # if num_classes != 21:
+    #     name += '_{}'.format(num_classes)
     x = Convolution2D(num_priors * num_classes, 1, 5, border_mode='same',
                       name=name)(net['conv4_3_norm'])
     net['conv4_3_norm_mbox_conf'] = x
@@ -161,8 +161,8 @@ def SSD300(input_shape, num_classes=21):
     flatten = Flatten(name='fc7_mbox_loc_flat')
     net['fc7_mbox_loc_flat'] = flatten(net['fc7_mbox_loc'])
     name = 'fc7_mbox_conf'
-    if num_classes != 21:
-        name += '_{}'.format(num_classes)
+    # if num_classes != 21:
+    #     name += '_{}'.format(num_classes)
     net['fc7_mbox_conf'] = Convolution2D(num_priors * num_classes, 1, 5,
                                          border_mode='same',
                                          name=name)(net['fc7'])
@@ -180,8 +180,8 @@ def SSD300(input_shape, num_classes=21):
     flatten = Flatten(name='conv6_2_mbox_loc_flat')
     net['conv6_2_mbox_loc_flat'] = flatten(net['conv6_2_mbox_loc'])
     name = 'conv6_2_mbox_conf'
-    if num_classes != 21:
-        name += '_{}'.format(num_classes)
+    # if num_classes != 21:
+    #     name += '_{}'.format(num_classes)
     x = Convolution2D(num_priors * num_classes, 1, 5, border_mode='same',
                       name=name)(net['conv6_2'])
     net['conv6_2_mbox_conf'] = x
@@ -199,8 +199,8 @@ def SSD300(input_shape, num_classes=21):
     flatten = Flatten(name='conv7_2_mbox_loc_flat')
     net['conv7_2_mbox_loc_flat'] = flatten(net['conv7_2_mbox_loc'])
     name = 'conv7_2_mbox_conf'
-    if num_classes != 21:
-        name += '_{}'.format(num_classes)
+    # if num_classes != 21:
+    #     name += '_{}'.format(num_classes)
     x = Convolution2D(num_priors * num_classes, 1, 5, border_mode='same',
                       name=name)(net['conv7_2'])
     net['conv7_2_mbox_conf'] = x
@@ -218,8 +218,8 @@ def SSD300(input_shape, num_classes=21):
     flatten = Flatten(name='conv8_2_mbox_loc_flat')
     net['conv8_2_mbox_loc_flat'] = flatten(net['conv8_2_mbox_loc'])
     name = 'conv8_2_mbox_conf'
-    if num_classes != 21:
-        name += '_{}'.format(num_classes)
+    # if num_classes != 21:
+    #     name += '_{}'.format(num_classes)
     x = Convolution2D(num_priors * num_classes, 1, 5, border_mode='same',
                       name=name)(net['conv8_2'])
     net['conv8_2_mbox_conf'] = x
@@ -237,8 +237,8 @@ def SSD300(input_shape, num_classes=21):
     flatten = Flatten(name='pool6_mbox_loc_flat')
     net['pool6_mbox_loc_flat'] = flatten(net['pool6_mbox_loc'])
     name = 'pool6_mbox_conf'
-    if num_classes != 21:
-        name += '_{}'.format(num_classes)
+    # if num_classes != 21:
+    #     name += '_{}'.format(num_classes)
     x = Convolution2D(num_priors * num_classes, 1, 5, border_mode='same',
               name=name)(net['pool6'])
     net['pool6_mbox_conf'] = x
@@ -247,13 +247,14 @@ def SSD300(input_shape, num_classes=21):
     priorbox = PriorBox(img_size, 276.0, max_size=330.0, aspect_ratios=[2, 3, 5, 7, 10],
                         variances=[0.1, 0.1, 0.2, 0.2],
                         name='pool6_mbox_priorbox')
-    if K.image_dim_ordering() == 'tf':
-        target_shape = (1, 1, 256)
-    else:
-        target_shape = (256, 1, 1)
-    net['pool6_reshaped'] = Reshape(target_shape,
-                                    name='pool6_reshaped')(net['pool6'])
-    net['pool6_mbox_priorbox'] = priorbox(net['pool6_reshaped'])
+    net['pool6_mbox_priorbox'] = priorbox(net['pool6'])
+    # if K.image_dim_ordering() == 'tf':
+    #     target_shape = (1, 1, 256)
+    # else:
+    #     target_shape = (256, 1, 1)
+    # net['pool6_reshaped'] = Reshape(target_shape,
+    #                                 name='pool6_reshaped')(net['pool6'])
+    # net['pool6_mbox_priorbox'] = priorbox(net['pool6_reshaped'])
     # Gather all predictions
     net['mbox_loc'] = merge([net['conv4_3_norm_mbox_loc_flat'],
                              net['fc7_mbox_loc_flat'],
