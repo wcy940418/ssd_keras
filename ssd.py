@@ -136,7 +136,7 @@ def SSD300(input_shape, num_classes=21):
     # Prediction from conv4_3
     net['conv4_3_norm'] = Normalize(20, name='conv4_3_norm')(net['conv4_3'])
     num_priors = 12
-    x = Convolution2D(num_priors * 4, [5, 1], 1, border_mode='same',
+    x = Convolution2D(num_priors * 4, (5, 1), 1, border_mode='same',
                       name='conv4_3_norm_mbox_loc')(net['conv4_3_norm'])
     net['conv4_3_norm_mbox_loc'] = x
     flatten = Flatten(name='conv4_3_norm_mbox_loc_flat')
@@ -144,7 +144,7 @@ def SSD300(input_shape, num_classes=21):
     name = 'conv4_3_norm_mbox_conf'
     if num_classes != 21:
         name += '_{}'.format(num_classes)
-    x = Convolution2D(num_priors * num_classes, [5, 1], 1, border_mode='same',
+    x = Convolution2D(num_priors * num_classes, (5, 1), 1, border_mode='same',
                       name=name)(net['conv4_3_norm'])
     net['conv4_3_norm_mbox_conf'] = x
     flatten = Flatten(name='conv4_3_norm_mbox_conf_flat')
@@ -155,7 +155,7 @@ def SSD300(input_shape, num_classes=21):
     net['conv4_3_norm_mbox_priorbox'] = priorbox(net['conv4_3_norm'])
     # Prediction from fc7
     num_priors = 12
-    net['fc7_mbox_loc'] = Convolution2D(num_priors * 4, [5, 1], 1,
+    net['fc7_mbox_loc'] = Convolution2D(num_priors * 4, (5, 1), 1,
                                         border_mode='same',
                                         name='fc7_mbox_loc')(net['fc7'])
     flatten = Flatten(name='fc7_mbox_loc_flat')
@@ -163,7 +163,7 @@ def SSD300(input_shape, num_classes=21):
     name = 'fc7_mbox_conf'
     if num_classes != 21:
         name += '_{}'.format(num_classes)
-    net['fc7_mbox_conf'] = Convolution2D(num_priors * num_classes, [5, 1], 1,
+    net['fc7_mbox_conf'] = Convolution2D(num_priors * num_classes, (5, 1), 1,
                                          border_mode='same',
                                          name=name)(net['fc7'])
     flatten = Flatten(name='fc7_mbox_conf_flat')
@@ -174,7 +174,7 @@ def SSD300(input_shape, num_classes=21):
     net['fc7_mbox_priorbox'] = priorbox(net['fc7'])
     # Prediction from conv6_2
     num_priors = 12
-    x = Convolution2D(num_priors * 4, [5, 1], 1, border_mode='same',
+    x = Convolution2D(num_priors * 4, (5, 1), 1, border_mode='same',
                       name='conv6_2_mbox_loc')(net['conv6_2'])
     net['conv6_2_mbox_loc'] = x
     flatten = Flatten(name='conv6_2_mbox_loc_flat')
@@ -182,7 +182,7 @@ def SSD300(input_shape, num_classes=21):
     name = 'conv6_2_mbox_conf'
     if num_classes != 21:
         name += '_{}'.format(num_classes)
-    x = Convolution2D(num_priors * num_classes, [5, 1], 1, border_mode='same',
+    x = Convolution2D(num_priors * num_classes, (5, 1), 1, border_mode='same',
                       name=name)(net['conv6_2'])
     net['conv6_2_mbox_conf'] = x
     flatten = Flatten(name='conv6_2_mbox_conf_flat')
@@ -193,7 +193,7 @@ def SSD300(input_shape, num_classes=21):
     net['conv6_2_mbox_priorbox'] = priorbox(net['conv6_2'])
     # Prediction from conv7_2
     num_priors = 12
-    x = Convolution2D(num_priors * 4, [5, 1], 1, border_mode='same',
+    x = Convolution2D(num_priors * 4, (5, 1), 1, border_mode='same',
                       name='conv7_2_mbox_loc')(net['conv7_2'])
     net['conv7_2_mbox_loc'] = x
     flatten = Flatten(name='conv7_2_mbox_loc_flat')
@@ -201,7 +201,7 @@ def SSD300(input_shape, num_classes=21):
     name = 'conv7_2_mbox_conf'
     if num_classes != 21:
         name += '_{}'.format(num_classes)
-    x = Convolution2D(num_priors * num_classes, [5, 1], 1, border_mode='same',
+    x = Convolution2D(num_priors * num_classes, (5, 1), 1, border_mode='same',
                       name=name)(net['conv7_2'])
     net['conv7_2_mbox_conf'] = x
     flatten = Flatten(name='conv7_2_mbox_conf_flat')
@@ -212,7 +212,7 @@ def SSD300(input_shape, num_classes=21):
     net['conv7_2_mbox_priorbox'] = priorbox(net['conv7_2'])
     # Prediction from conv8_2
     num_priors = 12
-    x = Convolution2D(num_priors * 4, [5, 1], 1, border_mode='same',
+    x = Convolution2D(num_priors * 4, (5, 1), 1, border_mode='same',
                       name='conv8_2_mbox_loc')(net['conv8_2'])
     net['conv8_2_mbox_loc'] = x
     flatten = Flatten(name='conv8_2_mbox_loc_flat')
@@ -220,7 +220,7 @@ def SSD300(input_shape, num_classes=21):
     name = 'conv8_2_mbox_conf'
     if num_classes != 21:
         name += '_{}'.format(num_classes)
-    x = Convolution2D(num_priors * num_classes, [5, 1], 1, border_mode='same',
+    x = Convolution2D(num_priors * num_classes, (5, 1), 1, border_mode='same',
                       name=name)(net['conv8_2'])
     net['conv8_2_mbox_conf'] = x
     flatten = Flatten(name='conv8_2_mbox_conf_flat')

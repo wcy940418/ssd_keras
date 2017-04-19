@@ -96,7 +96,7 @@ class PriorBox(Layer):
         if max_size:
             if max_size < min_size:
                 raise Exception('max_size must be greater than min_size.')
-            # self.aspect_ratios.append(1.0)
+            self.aspect_ratios.append(1.0)
         if aspect_ratios:
             for ar in aspect_ratios:
                 if ar in self.aspect_ratios:
