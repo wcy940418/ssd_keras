@@ -80,7 +80,7 @@ class PriorBox(Layer):
         Add Theano support
     """
     def __init__(self, img_size, min_size, max_size=None, aspect_ratios=None,
-                 flip=True, variances=[0.1], clip=True, **kwargs):
+                 flip=False, variances=[0.1], clip=True, **kwargs):
         if K.image_dim_ordering() == 'tf':
             self.waxis = 2
             self.haxis = 1
@@ -137,6 +137,8 @@ class PriorBox(Layer):
             elif ar != 1:
                 box_widths.append(self.min_size * np.sqrt(ar))
                 box_heights.append(self.min_size / np.sqrt(ar))
+        box_heights += box_heights
+        box_widths += box_widths
         box_widths = 0.5 * np.array(box_widths)
         box_heights = 0.5 * np.array(box_heights)
         # define centers of prior boxes
@@ -151,8 +153,9 @@ class PriorBox(Layer):
         centers_x, centers_y = np.meshgrid(linx, liny)
         centers_x = centers_x.reshape(-1, 1)
         centers_y = centers_y.reshape(-1, 1)
+        
         # define xmin, ymin, xmax, ymax of prior boxes
-        num_priors_ = len(self.aspect_ratios)
+        num_priors_ = len(self.aspect_ratios) * 2
         prior_boxes = np.concatenate((centers_x, centers_y), axis=1)
         prior_boxes = np.tile(prior_boxes, (1, 2 * num_priors_))
         prior_boxes[:, ::4] -= box_widths
@@ -162,6 +165,7 @@ class PriorBox(Layer):
         prior_boxes[:, ::2] /= img_width
         prior_boxes[:, 1::2] /= img_height
         prior_boxes = prior_boxes.reshape(-1, 4)
+        print prior_boxes.shape
         if self.clip:
             prior_boxes = np.minimum(np.maximum(prior_boxes, 0.0), 1.0)
         # define variances

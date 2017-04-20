@@ -132,7 +132,13 @@ def SSD300(input_shape, num_classes=21):
                                    activation='relu', border_mode='same',
                                    name='conv8_2')(net['conv8_1'])
     # Last Pool
-    net['pool6'] = GlobalAveragePooling2D(name='pool6')(net['conv8_2'])
+    x = GlobalAveragePooling2D(name='pool6')(net['conv8_2'])
+    if K.image_dim_ordering() == 'tf':
+        target_shape = (1, 1, 256)
+    else:
+        target_shape = (256, 1, 1)
+    net['pool6'] = Reshape(target_shape,
+                                    name='pool6_reshaped')(x)
     # Prediction from conv4_3
     net['conv4_3_norm'] = Normalize(20, name='conv4_3_norm')(net['conv4_3'])
     num_priors = 12
@@ -232,7 +238,7 @@ def SSD300(input_shape, num_classes=21):
     # Prediction from pool6
     num_priors = 14
     x = Convolution2D(num_priors * 4, 1, 5, border_mode='same',
-                  name='pool6_mbox_loc_flat')(net['pool6'])
+                  name='pool6_mbox_loc')(net['pool6'])
     net['pool6_mbox_loc'] = x
     flatten = Flatten(name='pool6_mbox_loc_flat')
     net['pool6_mbox_loc_flat'] = flatten(net['pool6_mbox_loc'])
