@@ -1,8 +1,10 @@
 """Some utils for SSD."""
 
 import numpy as np
+import cv2
 import tensorflow as tf
-
+import keras
+import os
 
 class BBoxUtility(object):
     """Utility class to do some stuff with bounding boxes and priors.
@@ -233,3 +235,59 @@ class BBoxUtility(object):
                 results[-1] = results[-1][argsort]
                 results[-1] = results[-1][:keep_top_k]
         return results
+
+def loadWeightsFromNumpy(model, npyPath):
+    weights = np.load(npyPath).item()
+    print weights.keys()
+    for L in model.layers:
+        if L.name in weights.keys():
+            param = weights[L.name]
+            if len(param) == 2:
+                v = [param['weights'], param['biases']]
+            elif len(param) == 1:
+                v = [param[L.name + '_gamma']]
+            L.set_weights(v)
+            print "%s loading complete" % L.name
+
+def saveWeightsToNumpy(model, npyPath):
+    params = {}
+    for L in model.layers:
+        v = {}
+        param = L.get_weights()
+        if len(param) == 2:
+            v['weights'], v['biases'] = param
+        elif len(param) == 1:
+            v[L.name + '_gamma'] = param[0]
+        param[L.name] = v
+        print "%s saving complete" % L.name
+    weights = np.asarray(params)
+    np.save(npyPath, weights)
+
+def loadGT(gtPath, imgPath):
+    imgList = os.listdir(imgPath)
+    gt = {}
+    for imgFile in imgList:
+        imgFilePath = os.path.join(imgPath, imgFile)
+        img = cv2.imread(imgFilePath, cv2.IMREAD_COLOR)
+        imgH, imgW = img.shape[0], img.shape[1]
+        boxes = []
+        gtFile = 'gt_' + os.path.splitext(imgFile)[0] + '.txt'
+        gtFilePath = os.path.join(gtPath, gtFile)
+        with open(gtFilePath, 'r') as fp:
+            for line in fp:
+                box = line.split(' ')
+                assert len(box) == 5, "length is %d" % len(box)
+                coord = []
+                for i in range(4):
+                    coord.append(float(box[i]))
+                coord.append(1)
+                coord = np.asarray(coord)
+                coord[0] /= imgW
+                coord[1] /= imgH
+                coord[2] /= imgW
+                coord[3] /= imgH
+                boxes.append(coord)
+        boxes = np.asarray(boxes)
+        gt[imgFile] = boxes
+    return gt
+

@@ -159,6 +159,7 @@ def SSD300(input_shape, num_classes=21):
                         variances=[0.1, 0.1, 0.2, 0.2],
                         name='conv4_3_norm_mbox_priorbox')
     net['conv4_3_norm_mbox_priorbox'] = priorbox(net['conv4_3_norm'])
+    print net['conv4_3_norm_mbox_priorbox']._keras_shape
     # Prediction from fc7
     num_priors = 14
     net['fc7_mbox_loc'] = Convolution2D(num_priors * 4, 1, 5,
@@ -178,6 +179,7 @@ def SSD300(input_shape, num_classes=21):
                         variances=[0.1, 0.1, 0.2, 0.2],
                         name='fc7_mbox_priorbox')
     net['fc7_mbox_priorbox'] = priorbox(net['fc7'])
+    print net['fc7_mbox_priorbox']._keras_shape
     # Prediction from conv6_2
     num_priors = 14
     x = Convolution2D(num_priors * 4, 1, 5, border_mode='same',
@@ -197,6 +199,7 @@ def SSD300(input_shape, num_classes=21):
                         variances=[0.1, 0.1, 0.2, 0.2],
                         name='conv6_2_mbox_priorbox')
     net['conv6_2_mbox_priorbox'] = priorbox(net['conv6_2'])
+    print net['conv6_2_mbox_priorbox']._keras_shape
     # Prediction from conv7_2
     num_priors = 14
     x = Convolution2D(num_priors * 4, 1, 5, border_mode='same',
@@ -216,6 +219,7 @@ def SSD300(input_shape, num_classes=21):
                         variances=[0.1, 0.1, 0.2, 0.2],
                         name='conv7_2_mbox_priorbox')
     net['conv7_2_mbox_priorbox'] = priorbox(net['conv7_2'])
+    print net['conv7_2_mbox_priorbox']._keras_shape
     # Prediction from conv8_2
     num_priors = 14
     x = Convolution2D(num_priors * 4, 1, 5, border_mode='same',
@@ -235,6 +239,7 @@ def SSD300(input_shape, num_classes=21):
                         variances=[0.1, 0.1, 0.2, 0.2],
                         name='conv8_2_mbox_priorbox')
     net['conv8_2_mbox_priorbox'] = priorbox(net['conv8_2'])
+    print net['conv8_2_mbox_priorbox']._keras_shape
     # Prediction from pool6
     num_priors = 14
     x = Convolution2D(num_priors * 4, 1, 5, border_mode='same',
@@ -254,6 +259,7 @@ def SSD300(input_shape, num_classes=21):
                         variances=[0.1, 0.1, 0.2, 0.2],
                         name='pool6_mbox_priorbox')
     net['pool6_mbox_priorbox'] = priorbox(net['pool6'])
+    print net['pool6_mbox_priorbox']._keras_shape
     # if K.image_dim_ordering() == 'tf':
     #     target_shape = (1, 1, 256)
     # else:
@@ -284,6 +290,7 @@ def SSD300(input_shape, num_classes=21):
                                   net['pool6_mbox_priorbox']],
                                  mode='concat', concat_axis=1,
                                  name='mbox_priorbox')
+    print net['mbox_priorbox']._keras_shape
     if hasattr(net['mbox_loc'], '_keras_shape'):
         num_boxes = net['mbox_loc']._keras_shape[-1] // 4
     elif hasattr(net['mbox_loc'], 'int_shape'):
