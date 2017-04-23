@@ -235,6 +235,17 @@ class BBoxUtility(object):
                 results[-1] = results[-1][argsort]
                 results[-1] = results[-1][:keep_top_k]
         return results
+    def multiScaleOutput(self, results):
+        preds = np.concatenate(results, axis=1)
+        for i in len(preds):
+            pred = preds[i]
+            loc = pred[:, -4:]
+            conf = pred[:, 1]
+            feed_dict = {self.boxes: loc,
+                         self.scores: conf}
+            idx = self.sess.run(self.nms, feed_dict=feed_dict)
+            result[i] = pred[idx]
+        return result
 
 def loadWeightsFromNumpy(model, npyPath):
     weights = np.load(npyPath).item()
