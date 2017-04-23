@@ -238,7 +238,7 @@ class BBoxUtility(object):
 
 def loadWeightsFromNumpy(model, npyPath):
     weights = np.load(npyPath).item()
-    print weights.keys()
+    # print weights.keys()
     for L in model.layers:
         if L.name in weights.keys():
             param = weights[L.name]
@@ -247,7 +247,7 @@ def loadWeightsFromNumpy(model, npyPath):
             elif len(param) == 1:
                 v = [param[L.name + '_gamma']]
             L.set_weights(v)
-            print "%s loading complete" % L.name
+            # print "%s loading complete" % L.name
 
 def saveWeightsToNumpy(model, npyPath):
     params = {}

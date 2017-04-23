@@ -144,22 +144,37 @@ class PriorBox(Layer):
         step_y = img_height / layer_height
         linx = np.linspace(0.5 * step_x, img_width - 0.5 * step_x,
                            layer_width)
-        # liny = np.linspace(0.5 * step_y, img_height - 0.5 * step_y,
-        #                    layer_height)
-        liny = np.linspace(0.5 * step_y, img_height,
-                           layer_height * 2)
+        liny = np.linspace(0.5 * step_y, img_height - 0.5 * step_y,
+                           layer_height)
+        # liny = np.linspace(0.5 * step_y, img_height,
+        #                    layer_height * 2)
         centers_x, centers_y = np.meshgrid(linx, liny)
+        # centers_x = np.vstack([np.ravel(x, order='F') for x in np.vsplit(centers_x, layer_height)])
+        # centers_y = np.vstack([np.ravel(x, order='F') for x in np.vsplit(centers_y, layer_height)])
         centers_x = centers_x.reshape(-1, 1)
         centers_y = centers_y.reshape(-1, 1)
         
         # define xmin, ymin, xmax, ymax of prior boxes
         num_priors_ = len(self.aspect_ratios)
         prior_boxes = np.concatenate((centers_x, centers_y), axis=1)
-        prior_boxes = np.tile(prior_boxes, (1, 2 * num_priors_))
-        prior_boxes[:, ::4] -= box_widths
-        prior_boxes[:, 1::4] -= box_heights
-        prior_boxes[:, 2::4] += box_widths
-        prior_boxes[:, 3::4] += box_heights
+        # prior_boxes = np.tile(prior_boxes, (1, 2 * num_priors_))
+        # prior_boxes[:, ::4] -= box_widths
+        # prior_boxes[:, 1::4] -= box_heights
+        # prior_boxes[:, 2::4] += box_widths
+        # prior_boxes[:, 3::4] += box_heights
+        # prior_boxes[:, ::2] /= img_width
+        # prior_boxes[:, 1::2] /= img_height
+        prior_boxes = np.tile(prior_boxes, (1, 4 * num_priors_))
+        prior_boxes[:, ::8] -= box_widths
+        prior_boxes[:, 1::8] -= box_heights
+        prior_boxes[:, 2::8] += box_widths
+        prior_boxes[:, 3::8] += box_heights
+        prior_boxes[:, 4::8] -= box_widths
+        prior_boxes[:, 5::8] -= box_heights
+        prior_boxes[:, 5::8] += 0.5 * step_y
+        prior_boxes[:, 6::8] += box_widths
+        prior_boxes[:, 7::8] += box_heights
+        prior_boxes[:, 7::8] += 0.5 * step_y
         prior_boxes[:, ::2] /= img_width
         prior_boxes[:, 1::2] /= img_height
         prior_boxes = prior_boxes.reshape(-1, 4)
@@ -174,6 +189,7 @@ class PriorBox(Layer):
         else:
             raise Exception('Must provide one or four variances.')
         prior_boxes = np.concatenate((prior_boxes, variances), axis=1)     
+
         prior_boxes_tensor = K.expand_dims(K.variable(prior_boxes), 0)
         if K.backend() == 'tensorflow':
             pattern = [tf.shape(x)[0], 1, 1]
